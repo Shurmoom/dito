@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Dito Clone</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+<body>
+    <table style="border-width: 2px; border-style: groove;">
+        <tr>
+            <td style="border-width: 2px; border-style: groove;">
+                <h2>Configurações</h2>
+                <div>
+                    <h4 style="display: inline-flex;">Tamanho: </h4>
+                    <button onclick="decreaseLength()" id="decreaseLengthBtn" disabled>&lt;</button>
+                    <input value="3" id="wordLength" type="number" style="width: 30px; text-align: center;" disabled>
+                    <button onclick="increaseLength()" id="increaseLengthBtn">&gt;</button>
+                </div>
+                <div>
+                    <button onclick="refresh()" id="refreshBtn">Sortear nova palavra</button>
+                </div>
+            </td>
+            <td style="border-width: 2px; border-style: groove;">
+                <h2>Histórico</h2>
+                <table style="width: 10%" id="alphabet"></table>
+            </td>
+        </tr>
+    </table>
+    <table id="inputSection">
+        <tr>
+            <td><input id="wordInput" type="text"/></td>
+            <td><button onclick="sendWord()">Enviar</button></td>
+            <td id="errorBox"></td>
+            <td><h3 style="color: white">.</h3></td>
+        </tr>
+    </table>
+    <section id="wordsSection">
+        <table style="width: 10%" id="words"></table>
+    </section>
+</body>
+</html>

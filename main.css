@@ -1,0 +1,30 @@
+td {
+    text-align: center;
+    min-width: 25px;
+}
+
+.wrongChar {
+    background-color: lightgrey;
+}
+
+.wrongPlace {
+    background-color: aquamarine;
+}
+
+.rightPlace {
+    background-color: greenyellow;
+}
+
+.configBox {
+    width: 250px;
+    border-width: 2px;
+    border-style: groove;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+}
+
+.errorMsg {
+    color: red;
+    transition: color 3s;
+}
