@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
@@ -7,37 +8,105 @@
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <script src='main.js'></script>
 </head>
+
 <body>
-    <table style="border-width: 2px; border-style: groove;">
+    <table>
         <tr>
-            <td style="border-width: 2px; border-style: groove;">
-                <h2>Configurações</h2>
-                <div>
-                    <h4 style="display: inline-flex;">Tamanho: </h4>
-                    <button onclick="decreaseLength()" id="decreaseLengthBtn" disabled>&lt;</button>
-                    <input value="3" id="wordLength" type="number" style="width: 30px; text-align: center;" disabled>
-                    <button onclick="increaseLength()" id="increaseLengthBtn">&gt;</button>
+            <th style="border-width: 2px; border-style: groove; padding: 5px;">Configurações</th>
+            <th style="border-width: 2px; border-style: groove;">Histórico</th>
+            <th style="border-width: 2px; border-style: groove;">Legenda</th> 
+        </tr>
+        <tr>
+            <td style="border-width: 2px; border-style: groove; padding: 5px;">
+                <div style="display: inline-flex;">
+                    <h4 style="align-self: center; padding-right: 5px;">Tamanho: </h4>
+                    <button onclick="decreaseLength()" id="decreaseLengthBtn" style="height: 25px; align-self: center;">&lt;</button>
+                    <p id="wordLength" style="align-self: center; min-width: 25px;">5</p>
+                    <button onclick="increaseLength()" id="increaseLengthBtn" style="height: 25px; align-self: center;">&gt;</button>
                 </div>
                 <div>
-                    <button onclick="refresh()" id="refreshBtn">Sortear nova palavra</button>
+                    <button onclick="refresh()" id="refreshBtn">Reiniciar</button>
                 </div>
             </td>
             <td style="border-width: 2px; border-style: groove;">
-                <h2>Histórico</h2>
-                <table style="width: 10%" id="alphabet"></table>
+                <div style="padding-bottom: 5px; padding-top: 5px;">
+                    <form onchange="changeAlpha()" id="formChangeAlpha">
+                        <input type="radio" id="alphaTypeQWERTY" name="alphaType" value="QWERTY" checked>
+                        <label for="alphaTypeQWERTY">Teclado</label>
+                        <input type="radio" id="alphaTypeALPHA" name="alphaType" value="ALPHA">
+                        <label for="alphaTypeALPHA">Alfabeto</label>
+                        <input type="radio" id="alphaTypePT" name="alphaType" value="PT">
+                        <label for="alphaTypePT">Português</label>
+                    </form>
+                </div>
+                <table>
+                    <tbody id="alphabet">
+                        <tr>
+                            <td>Q</td>
+                            <td>W</td>
+                            <td>E</td>
+                            <td>R</td>
+                            <td>T</td>
+                            <td>Y</td>
+                            <td>U</td>
+                            <td>I</td>
+                            <td>O</td>
+                            <td>P</td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td>S</td>
+                            <td>D</td>
+                            <td>F</td>
+                            <td>G</td>
+                            <td>H</td>
+                            <td>J</td>
+                            <td>K</td>
+                            <td>L</td>
+                        </tr>
+                        <tr>
+                            <td>Z</td>
+                            <td>X</td>
+                            <td>C</td>
+                            <td>V</td>
+                            <td>B</td>
+                            <td>N</td>
+                            <td>M</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td style="border-width: 2px; border-style: groove; padding: 5px;">
+                <table>
+                    <tr>
+                        <td class="wrongChar"></td>
+                        <td style="text-align: start;">: não existe</td>
+                    </tr>
+                    <tr>
+                        <td class="wrongPlace"></td>
+                        <td style="text-align: start;">: existe</td>
+                    </tr>
+                    <tr>
+                        <td class="rightPlace"></td>
+                        <td style="text-align: start;">: posição correta</td>
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>
-    <table id="inputSection">
-        <tr>
-            <td><input id="wordInput" type="text"/></td>
-            <td><button onclick="sendWord()">Enviar</button></td>
-            <td id="errorBox"></td>
-            <td><h3 style="color: white">.</h3></td>
-        </tr>
-    </table>
-    <section id="wordsSection">
-        <table style="width: 10%" id="words"></table>
+    <div id="errorBox"></div>
+    <section id="inputSection" style="width: 633px;">
+        <table style="margin-left: auto; margin-right: auto;">
+            <tr>
+                <td style="height: 61px;"><input id="wordInput" type="text" placeholder="Digite aqui..." style="width: 125px;"/></td>
+                <td><button onclick="sendWord()">Enviar</button></td>
+            </tr>
+        </table>
+    </section>
+    <section id="wordsSection" style="overflow-y: scroll; height:250px; width: 633px; border-width: 2px; border-style: groove; background-color: whitesmoke;">
+        <table style="margin-left: auto; margin-right: auto;" id="words"></table>
+        <p id="meaning" style="text-align: center;"></p>
     </section>
 </body>
+
 </html>

@@ -1,34 +1,81 @@
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 12;
 
-const QWERTY = ['Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','C','Z','X','C','V','B','N','M'];
+const QWERTY = ['Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M'];
+const ALPHA = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+const HCESAR = ['H','C','E','S','A','R','O','P','Z','Q','T','D','I','N','U','L','M','X','Y','J','B','F','V','G','K','W'];
+
+let chosenAlphabet = QWERTY;
 let alphaClassMap = {};
 
 let word = '';
 setTimeout(() => {
     setRandomWord();
-    QWERTY.forEach(element => alphaClassMap[element] = '');
+    chosenAlphabet.forEach(element => alphaClassMap[element] = '');
     renderAlphabet();
 }, 1);
+
+function getRefs(string) {
+    const split = string.split('<def>');
+    if (split.length < 2) return;
+    let output = '';
+    for (let i = 1; i < split.length; i++) {
+        const newString = split[i].split("</def>")[0].replaceAll("\n","");
+        output += newString + ' ';
+    }
+    return output;
+}
+async function nearAPI(nearTerm) {
+    const result = await fetch(`https://api.dicionario-aberto.net/near/${nearTerm.toLowerCase()}`).then(response => response.json());
+    return result;
+}
+async function fetchAPI(searchWord) {
+    const result = await fetch(`https://api.dicionario-aberto.net/word/${searchWord}/1`).then(response => response.json());
+    if (result.length) {
+        const output = getRefs(result[0].xml);
+        document.getElementById('meaning').innerHTML = output;
+    } else {
+        document.getElementById('meaning').innerHTML = 'Palavras próximas: <br><br>';
+        const nearWords = await nearAPI(searchWord);
+        if (nearWords && nearWords.length) {
+            nearWords.forEach(async word => {
+                const result = await fetch(`https://api.dicionario-aberto.net/word/${word}/1`).then(response => response.json());
+                if (result.length) {
+                    const output = getRefs(result[0].xml);
+                    document.getElementById('meaning').innerHTML += word.toUpperCase() + ': ' + output + '<br><br>';
+                }
+            });
+        } else {
+            document.getElementById('meaning').innerHTML += 'Oops, não encontrei o significado da palavra...';
+        };
+    }
+}
+
+function changeAlpha() {
+    if (document.getElementById('alphaTypeQWERTY').checked) chosenAlphabet = QWERTY;
+    else if (document.getElementById('alphaTypeALPHA').checked) chosenAlphabet = ALPHA;
+    else if (document.getElementById('alphaTypePT').checked) chosenAlphabet = HCESAR;
+    renderAlphabet();
+}
 
 function renderAlphabet() {
     let tableData = '';
 
     let tableRow = '';
     for (let i = 0; i <= 9; i++) {
-        tableRow += `<td class="${alphaClassMap[QWERTY[i]]}">${QWERTY[i]}</td>`;
+        tableRow += `<td class="${alphaClassMap[chosenAlphabet[i]]}">${chosenAlphabet[i]}</td>`;
     }
     tableData += `<tr>${tableRow}</tr>`;
 
     tableRow = '';
-    for (let i = 10; i <= 19; i++) {
-        tableRow += `<td class="${alphaClassMap[QWERTY[i]]}">${QWERTY[i]}</td>`;
+    for (let i = 10; i <= 18; i++) {
+        tableRow += `<td class="${alphaClassMap[chosenAlphabet[i]]}">${chosenAlphabet[i]}</td>`;
     }
     tableData += `<tr>${tableRow}</tr>`;
 
     tableRow = '';
-    for (let i = 20; i <= 26; i++) {
-        tableRow += `<td class="${alphaClassMap[QWERTY[i]]}">${QWERTY[i]}</td>`;
+    for (let i = 19; i <= 25; i++) {
+        tableRow += `<td class="${alphaClassMap[chosenAlphabet[i]]}">${chosenAlphabet[i]}</td>`;
     }
     tableData += `<tr>${tableRow}</tr>`;
 
@@ -74,7 +121,7 @@ function returnRow(charArray) {
 
 function error(msg) {
     document.getElementById('errorBox').innerHTML = `<h4 class='errorMsg' id='errorMsg'>Erro: ${msg}</h4>`;
-    setTimeout(() => {document.getElementById('errorMsg').style.color = 'white'}, 1000);
+    setTimeout(() => {document.getElementById('errorMsg').style.color = 'rgba(0,0,0,0)'}, 1000);
 }
 
 function sendWord() {
@@ -95,6 +142,8 @@ function sendWord() {
     }
     document.getElementById('words').innerHTML += returnRow(inputArray);
     renderAlphabet();
+
+    if(word === input) fetchAPI(word.toLowerCase());
 }
 
 function setRandomWord() {
@@ -103,7 +152,7 @@ function setRandomWord() {
     // set word
     let rnd = Math.round(Math.random() * (ALL_WORDS.length-1));
     word = ALL_WORDS[rnd].toUpperCase();
-    while(word.length !== +document.getElementById('wordLength').value) {
+    while(word.length !== +document.getElementById('wordLength').innerHTML) {
         rnd = Math.round(Math.random() * (ALL_WORDS.length-1));
         word = ALL_WORDS[rnd].toUpperCase();
     }
@@ -111,29 +160,30 @@ function setRandomWord() {
 
 function refresh() {
     setRandomWord();
-    QWERTY.forEach(element => alphaClassMap[element] = '');
+    chosenAlphabet.forEach(element => alphaClassMap[element] = '');
     renderAlphabet();
+    document.getElementById('meaning').innerHTML = '';
 }
 
 function increaseLength() {
-    if (document.getElementById('wordLength').value == MIN_LENGTH) {
+    if (document.getElementById('wordLength').innerHTML == MIN_LENGTH) {
         document.getElementById('decreaseLengthBtn').toggleAttribute('disabled');
     }
-    const value = +document.getElementById('wordLength').value;
-    document.getElementById('wordLength').value = value + 1;
-    if (document.getElementById('wordLength').value == MAX_LENGTH) {
+    const value = +document.getElementById('wordLength').innerHTML;
+    document.getElementById('wordLength').innerHTML = value + 1;
+    if (document.getElementById('wordLength').innerHTML == MAX_LENGTH) {
         document.getElementById('increaseLengthBtn').toggleAttribute('disabled');
     }
     refresh();
 }
 
 function decreaseLength() {
-    if (document.getElementById('wordLength').value == MAX_LENGTH) {
+    if (document.getElementById('wordLength').innerHTML == MAX_LENGTH) {
         document.getElementById('increaseLengthBtn').toggleAttribute('disabled');
     }
-    const value = +document.getElementById('wordLength').value;
-    document.getElementById('wordLength').value = value - 1;
-    if (document.getElementById('wordLength').value == MIN_LENGTH) {
+    const value = +document.getElementById('wordLength').innerHTML;
+    document.getElementById('wordLength').innerHTML = value - 1;
+    if (document.getElementById('wordLength').innerHTML == MIN_LENGTH) {
         document.getElementById('decreaseLengthBtn').toggleAttribute('disabled');
     }
     refresh();
