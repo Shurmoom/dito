@@ -1,5 +1,5 @@
-const MIN_LENGTH = 3;
-const MAX_LENGTH = 12;
+const MIN_LENGTH = 1;
+const MAX_LENGTH = 20;
 
 const QWERTY = ['Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M'];
 const QWERTY_ROWS = ['Q','A','Z'];
@@ -50,11 +50,13 @@ async function fetchAPI(searchWord) {
         const output = getRefs(result[0].xml);
         document.getElementById('meaning').innerHTML = `<b>${word.toUpperCase()}</b>: ${output}<br><br>`;
         document.getElementById('meaning').innerHTML += '<small>Fonte: Dicionário Aberto de Portugal</small>';
+        document.getElementById('meaning').scrollIntoView();
     } else {
         const nearWords = await nearAPI(searchWord);
         let count = 0;
         if (nearWords && nearWords.length) {
             document.getElementById('meaning').innerHTML = 'Palavras próximas: <br><br>';
+            document.getElementById('meaning').scrollIntoView();
             await nearWords.forEach(async word => {
                 const result = await fetch(`https://api.dicionario-aberto.net/word/${word}/1`).then(response => response.json());
                 count++;
@@ -96,7 +98,7 @@ function renderAlphabet() {
         if (chosenAlphabet[i] === letter) {
             tableData += '<tr>';
             while(i < chosenAlphabet.length && chosenAlphabet[i] !== chosenRows[index + 1]) {
-                tableData += `<td class="${alphaClassMap[chosenAlphabet[i]]}">${chosenAlphabet[i]}</td>`;
+                tableData += `<td class="${alphaClassMap[chosenAlphabet[i]]}" style="border-width: 2px; border-style: ridge;">${chosenAlphabet[i]}</td>`;
                 i++;
             }
             tableData += '</tr>';
@@ -144,8 +146,24 @@ function returnRow(charArray) {
 }
 
 function error(msg) {
-    document.getElementById('errorBox').innerHTML = `<h4 class='errorMsg' id='errorMsg'>Erro: ${msg}</h4>`;
+    document.getElementById('errorBox').innerHTML = `<p class='errorMsg' id='errorMsg'><small>Erro: ${msg}</small></p>`;
     setTimeout(() => {document.getElementById('errorMsg').style.color = 'rgba(0,0,0,0)'}, 1000);
+}
+
+function adjustWordsTable() {
+    const newWidth = (+document.getElementById('wordLength').innerHTML * 30) + 30 + (10 * 2);
+    document.getElementById('wordsSection').style.width = `${newWidth}px`;
+}
+
+function victory() {
+    fetchAPI(word.toLowerCase());
+    document.getElementById('sendBtn').disabled = true;
+    document.getElementById('scoreVictories').innerHTML = +document.getElementById('scoreVictories').innerHTML + 1;
+    const nTries = document.getElementById('words').childElementCount;
+    if (document.getElementById('scoreNumberTries').innerHTML === '?' || nTries < +document.getElementById('scoreNumberTries').innerHTML)
+        document.getElementById('scoreNumberTries').innerHTML = nTries;
+    if (document.getElementById('scoreBiggestWord').innerHTML === '?' || word.length > +document.getElementById('scoreBiggestWord').innerHTML)
+        document.getElementById('scoreBiggestWord').innerHTML = word.length;
 }
 
 function sendWord() {
@@ -167,10 +185,7 @@ function sendWord() {
     document.getElementById('words').innerHTML += returnRow(inputArray);
     document.getElementById(`word${document.getElementById('words').childElementCount-1}`).scrollIntoView();
     renderAlphabet();
-    if(word === input) {
-        fetchAPI(word.toLowerCase());
-        document.getElementById('sendBtn').disabled = true;
-    }
+    if(word === input) victory();
 }
 
 function setRandomWord() {
@@ -207,10 +222,12 @@ async function setRandomWordFromAPI() {
 function refresh() {
     document.getElementById('sendBtn').disabled = false;
     document.getElementById('words').innerHTML = '';
+    document.getElementById('wordInput').value = '';
     setRandomWord();
     chosenAlphabet.forEach(element => alphaClassMap[element] = '');
     renderAlphabet();
     document.getElementById('meaning').innerHTML = '';
+    adjustWordsTable();
 }
 
 function increaseLength() {

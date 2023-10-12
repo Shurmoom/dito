@@ -23,7 +23,6 @@ td {
 }
 
 .errorMsg {
-    position: absolute;
     color: red;
     transition: color 3s;
 }
