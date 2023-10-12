@@ -15,12 +15,24 @@ setTimeout(() => {
     renderAlphabet();
 }, 1);
 
+function italic(string) {
+    const replacement = ['<i>','</i>'];
+    let i = 0;
+    let newString = string;
+    while(newString.includes('_')) {
+        newString = newString.replace('_',replacement[i]);
+        i++;
+        if (i === 2) i = 0;
+    }
+    return newString;
+}
 function getRefs(string) {
     const split = string.split('<def>');
     if (split.length < 2) return;
     let output = '';
     for (let i = 1; i < split.length; i++) {
-        const newString = split[i].split("</def>")[0].replaceAll("\n","");
+        let newString = split[i].split("</def>")[0].replaceAll("\n"," ");
+        newString = italic(newString);
         output += newString + ' ';
     }
     return output;
@@ -33,20 +45,24 @@ async function fetchAPI(searchWord) {
     const result = await fetch(`https://api.dicionario-aberto.net/word/${searchWord}/1`).then(response => response.json());
     if (result.length) {
         const output = getRefs(result[0].xml);
-        document.getElementById('meaning').innerHTML = output;
+        document.getElementById('meaning').innerHTML = `<b>${word.toUpperCase()}</b>: ${output}<br><br>`;
+        document.getElementById('meaning').innerHTML += '<small>Fonte: Dicionário Aberto de Portugal</small>';
     } else {
-        document.getElementById('meaning').innerHTML = 'Palavras próximas: <br><br>';
         const nearWords = await nearAPI(searchWord);
+        let count = 0;
         if (nearWords && nearWords.length) {
-            nearWords.forEach(async word => {
+            document.getElementById('meaning').innerHTML = 'Palavras próximas: <br><br>';
+            await nearWords.forEach(async word => {
                 const result = await fetch(`https://api.dicionario-aberto.net/word/${word}/1`).then(response => response.json());
+                count++;
                 if (result.length) {
                     const output = getRefs(result[0].xml);
-                    document.getElementById('meaning').innerHTML += word.toUpperCase() + ': ' + output + '<br><br>';
+                    document.getElementById('meaning').innerHTML += `<b>${word.toUpperCase()}</b>: ${output}<br><br>`;
                 }
+                if(count === nearWords.length) document.getElementById('meaning').innerHTML += '<small>Fonte: Dicionário Aberto de Portugal</small>';
             });
         } else {
-            document.getElementById('meaning').innerHTML += 'Oops, não encontrei o significado da palavra...';
+            document.getElementById('meaning').innerHTML += '<em>Significado não encontrado no Dicionário Aberto de Portugal...</em>';
         };
     }
 }
@@ -106,10 +122,10 @@ function returnRow(charArray) {
     charArray.forEach((char,i) => {
         if(word.charAt(i) == char) {
             className = 'rightPlace';
-            alphaClassMap[char] = 'wrongPlace';
+            alphaClassMap[char] = 'rightPlace';
         } else if(word.includes(char)) {
             className = 'wrongPlace';
-            alphaClassMap[char] = 'wrongPlace';
+            if(alphaClassMap[char] == '') alphaClassMap[char] = 'wrongPlace';
         } else {
             className = 'wrongChar';
             if(alphaClassMap[char] == '') alphaClassMap[char] = 'wrongChar';
@@ -147,9 +163,6 @@ function sendWord() {
 }
 
 function setRandomWord() {
-    // clean table
-    document.getElementById('words').innerHTML = '';
-    // set word
     let rnd = Math.round(Math.random() * (ALL_WORDS.length-1));
     word = ALL_WORDS[rnd].toUpperCase();
     while(word.length !== +document.getElementById('wordLength').innerHTML) {
@@ -158,8 +171,30 @@ function setRandomWord() {
     }
 }
 
+const loadingMsg = 'Gerando palavra';
+const loadingSymbols = ['\\','|','/'];
+async function setRandomWordFromAPI() {
+    let result = await fetch(`https://api.dicionario-aberto.net/random`).then(response => response.json());
+    let w = result.word.normalize("NFD").replace(/\p{Diacritic}/gu, "").toUpperCase();
+    let i = 0;
+    while(w.length !== +document.getElementById('wordLength').innerHTML || w.includes('PH') || w.includes('LL') || w.includes('-')) {
+        document.getElementById('words').innerHTML = `${loadingSymbols[i]} ${loadingMsg} ${loadingSymbols[i]}`;
+        i++;
+        if (i === loadingSymbols.length) i = 0;
+
+        result = await fetch(`https://api.dicionario-aberto.net/random`).then(response => response.json());
+        w = result.word.normalize("NFD").replace(/\p{Diacritic}/gu, "").toUpperCase();;
+    }
+    document.getElementById('words').innerHTML = '';
+    word = w;
+    console.log(w);
+}
+
 function refresh() {
+    document.getElementById('words').innerHTML = '';
     setRandomWord();
+    // setRandomWordFromAPI();
+    console.log(word);
     chosenAlphabet.forEach(element => alphaClassMap[element] = '');
     renderAlphabet();
     document.getElementById('meaning').innerHTML = '';
