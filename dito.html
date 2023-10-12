@@ -13,7 +13,7 @@
     <table>
         <tr>
             <th style="border-width: 2px; border-style: groove; padding: 5px;">Configurações</th>
-            <th style="border-width: 2px; border-style: groove;">Histórico</th>
+            <th style="border-width: 2px; border-style: groove; min-width: 292px;">Histórico</th>
             <th style="border-width: 2px; border-style: groove;">Legenda</th> 
         </tr>
         <tr>
@@ -32,11 +32,11 @@
                 <div style="padding-bottom: 5px; padding-top: 5px;">
                     <form onchange="changeAlpha()" id="formChangeAlpha">
                         <input type="radio" id="alphaTypeQWERTY" name="alphaType" value="QWERTY" checked>
-                        <label for="alphaTypeQWERTY">Teclado</label>
+                        <label for="alphaTypeQWERTY"><small>Teclado</small></label>
                         <input type="radio" id="alphaTypeALPHA" name="alphaType" value="ALPHA">
-                        <label for="alphaTypeALPHA">Alfabeto</label>
+                        <label for="alphaTypeALPHA"><small>Alfabeto</small></label>
                         <input type="radio" id="alphaTypePT" name="alphaType" value="PT">
-                        <label for="alphaTypePT">Português</label>
+                        <label for="alphaTypePT"><small>Português</small></label>
                     </form>
                 </div>
                 <table>
@@ -80,15 +80,15 @@
                 <table>
                     <tr>
                         <td class="wrongChar"></td>
-                        <td style="text-align: start;">: não existe</td>
+                        <td style="text-align: start;"><small>: não existe</small></td>
                     </tr>
                     <tr>
                         <td class="wrongPlace"></td>
-                        <td style="text-align: start;">: existe</td>
+                        <td style="text-align: start;"><small>: existe</small></td>
                     </tr>
                     <tr>
                         <td class="rightPlace"></td>
-                        <td style="text-align: start;">: posição correta</td>
+                        <td style="text-align: start;"><small>: posição correta</small></td>
                     </tr>
                 </table>
             </td>
@@ -99,7 +99,7 @@
         <table style="margin-left: auto; margin-right: auto;">
             <tr>
                 <td style="height: 61px;"><input id="wordInput" type="text" placeholder="Digite aqui..." style="width: 125px;"/></td>
-                <td><button onclick="sendWord()">Enviar</button></td>
+                <td><button onclick="sendWord()" id="sendBtn">Enviar</button></td>
             </tr>
         </table>
     </section>

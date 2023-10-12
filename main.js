@@ -2,8 +2,11 @@ const MIN_LENGTH = 3;
 const MAX_LENGTH = 12;
 
 const QWERTY = ['Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M'];
+const QWERTY_ROWS = ['Q','A','Z'];
 const ALPHA = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+const ALPHA_ROWS = ['A','K','U'];
 const HCESAR = ['H','C','E','S','A','R','O','P','Z','Q','T','D','I','N','U','L','M','X','Y','J','B','F','V','G','K','W'];
+const HCESAR_ROWS = ['H','Q','Y'];
 
 let chosenAlphabet = QWERTY;
 let alphaClassMap = {};
@@ -75,26 +78,30 @@ function changeAlpha() {
 }
 
 function renderAlphabet() {
+    let chosenRows = [];
+    switch(chosenAlphabet) {
+        case QWERTY:
+            chosenRows = QWERTY_ROWS;
+            break;
+        case ALPHA:
+            chosenRows = ALPHA_ROWS;
+            break;
+        case HCESAR:
+            chosenRows = HCESAR_ROWS;
+            break;
+    }
     let tableData = '';
-
-    let tableRow = '';
-    for (let i = 0; i <= 9; i++) {
-        tableRow += `<td class="${alphaClassMap[chosenAlphabet[i]]}">${chosenAlphabet[i]}</td>`;
-    }
-    tableData += `<tr>${tableRow}</tr>`;
-
-    tableRow = '';
-    for (let i = 10; i <= 18; i++) {
-        tableRow += `<td class="${alphaClassMap[chosenAlphabet[i]]}">${chosenAlphabet[i]}</td>`;
-    }
-    tableData += `<tr>${tableRow}</tr>`;
-
-    tableRow = '';
-    for (let i = 19; i <= 25; i++) {
-        tableRow += `<td class="${alphaClassMap[chosenAlphabet[i]]}">${chosenAlphabet[i]}</td>`;
-    }
-    tableData += `<tr>${tableRow}</tr>`;
-
+    let i = 0;
+    chosenRows.forEach((letter, index) => {
+        if (chosenAlphabet[i] === letter) {
+            tableData += '<tr>';
+            while(i < chosenAlphabet.length && chosenAlphabet[i] !== chosenRows[index + 1]) {
+                tableData += `<td class="${alphaClassMap[chosenAlphabet[i]]}">${chosenAlphabet[i]}</td>`;
+                i++;
+            }
+            tableData += '</tr>';
+        }
+    });
     document.getElementById('alphabet').innerHTML = `${tableData}`;
 }
 
@@ -132,7 +139,8 @@ function returnRow(charArray) {
         }
         tableData += `<td class="${className}">${char}</td>`;
     });
-    return `<tr>${tableData}</tr>`;
+    const count = document.getElementById('words').childElementCount;
+    return `<tr id="word${count}"><td>${count+1}</td>${tableData}</tr>`;
 }
 
 function error(msg) {
@@ -157,9 +165,12 @@ function sendWord() {
         return;
     }
     document.getElementById('words').innerHTML += returnRow(inputArray);
+    document.getElementById(`word${document.getElementById('words').childElementCount-1}`).scrollIntoView();
     renderAlphabet();
-
-    if(word === input) fetchAPI(word.toLowerCase());
+    if(word === input) {
+        fetchAPI(word.toLowerCase());
+        document.getElementById('sendBtn').disabled = true;
+    }
 }
 
 function setRandomWord() {
@@ -171,6 +182,9 @@ function setRandomWord() {
     }
 }
 
+//  wip: get random word from API
+//      todo [main]: validate inputs through /near endpoint
+//      todo [html]: create <select> opts
 const loadingMsg = 'Gerando palavra';
 const loadingSymbols = ['\\','|','/'];
 async function setRandomWordFromAPI() {
@@ -191,10 +205,9 @@ async function setRandomWordFromAPI() {
 }
 
 function refresh() {
+    document.getElementById('sendBtn').disabled = false;
     document.getElementById('words').innerHTML = '';
     setRandomWord();
-    // setRandomWordFromAPI();
-    console.log(word);
     chosenAlphabet.forEach(element => alphaClassMap[element] = '');
     renderAlphabet();
     document.getElementById('meaning').innerHTML = '';
