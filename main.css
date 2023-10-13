@@ -10,6 +10,12 @@ td {
     min-width: 25px;
 }
 
+.noTry {
+    border-width: 2px;
+    border-style: ridge;
+    background-color: whitesmoke;    
+}
+
 .wrongChar {
     border-width: 2px;
     border-style: ridge;

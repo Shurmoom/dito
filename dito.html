@@ -81,7 +81,7 @@
             <td style="border-width: 2px; border-style: groove; padding: 5px;">
                 <table>
                     <tr>
-                        <td style="border-width: 2px; border-style: ridge;"></td>
+                        <td class="noTry" style="border-width: 2px; border-style: ridge;"></td>
                         <td style="text-align: start;"><small>: não foi tentada</small></td>
                     </tr>
                     <tr>
@@ -133,9 +133,20 @@
             </td>
         </tr>
     </table>
+    <div style="width: 673px; margin-bottom: 25px;">
+        <table id="secretWord" style="margin-left: auto; margin-right: auto;">
+            <tr>
+                <td class="noTry" style="border-width: 2px; border-style: ridge;">?</td>
+                <td class="noTry" style="border-width: 2px; border-style: ridge;">?</td>
+                <td class="noTry" style="border-width: 2px; border-style: ridge;">?</td>
+                <td class="noTry" style="border-width: 2px; border-style: ridge;">?</td>
+                <td class="noTry" style="border-width: 2px; border-style: ridge;">?</td>
+            </tr>
+        </table>
+    </div>
     <div style="width: 673px;">
         <div id="wordsSection" style="overflow-y: scroll; min-height: 31px; max-height: 200px; width: 210px; margin-left: auto; margin-right: auto; border-width: 2px; border-style: groove; background-color: whitesmoke;">
-            <table style="margin-left: auto; margin-right: auto;" id="words"></table>
+            <table id="words" style="margin-left: auto; margin-right: auto;"></table>
         </div>
     </div>
     <p id="meaning" style="text-align: start; width: 673px;"></p>

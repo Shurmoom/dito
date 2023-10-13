@@ -14,7 +14,7 @@ let alphaClassMap = {};
 let word = '';
 setTimeout(() => {
     setRandomWord();
-    chosenAlphabet.forEach(element => alphaClassMap[element] = '');
+    chosenAlphabet.forEach(element => alphaClassMap[element] = 'noTry');
     renderAlphabet();
     document.getElementById('wordInput').addEventListener("keypress", (event) => {
         if (event.key === "Enter") {
@@ -22,6 +22,7 @@ setTimeout(() => {
         }
     });
     document.getElementById('wordInput').focus();
+    renderSecretWord();
 }, 1);
 
 function italic(string) {
@@ -104,7 +105,7 @@ function renderAlphabet() {
         if (chosenAlphabet[i] === letter) {
             tableData += '<tr>';
             while(i < chosenAlphabet.length && chosenAlphabet[i] !== chosenRows[index + 1]) {
-                tableData += `<td class="${alphaClassMap[chosenAlphabet[i]]}" style="border-width: 2px; border-style: ridge;">${chosenAlphabet[i]}</td>`;
+                tableData += `<td class="${alphaClassMap[chosenAlphabet[i]]}">${chosenAlphabet[i]}</td>`;
                 i++;
             }
             tableData += '</tr>';
@@ -140,10 +141,10 @@ function returnRow(charArray) {
             alphaClassMap[char] = 'rightPlace';
         } else if(word.includes(char)) {
             className = 'wrongPlace';
-            if(alphaClassMap[char] == '') alphaClassMap[char] = 'wrongPlace';
+            if(alphaClassMap[char] == 'noTry') alphaClassMap[char] = 'wrongPlace';
         } else {
             className = 'wrongChar';
-            if(alphaClassMap[char] == '') alphaClassMap[char] = 'wrongChar';
+            if(alphaClassMap[char] == 'noTry') alphaClassMap[char] = 'wrongChar';
         }
         tableData += `<td class="${className}">${char}</td>`;
     });
@@ -173,6 +174,16 @@ function victory() {
         document.getElementById('scoreBiggestWord').innerHTML = word.length;
 }
 
+function renderSecretWord() {
+    const arrayWord = Array.from(word);
+    let tableData = '';
+    arrayWord.forEach((char, i) => {
+        if(alphaClassMap[char] == 'rightPlace') tableData += `<td class="rightPlace">${char}</td>`;
+        else tableData += `<td class="noTry">?</td>`;
+    });
+    document.getElementById('secretWord').innerHTML = `<tr>${tableData}</tr>`;
+}
+
 function sendWord() {
     const input = document.getElementById('wordInput').value.toUpperCase();
     const inputArray = Array.from(input);
@@ -192,6 +203,7 @@ function sendWord() {
     document.getElementById('words').innerHTML += returnRow(inputArray);
     document.getElementById(`word${document.getElementById('words').childElementCount-1}`).scrollIntoView();
     renderAlphabet();
+    renderSecretWord();
     if(word === input) victory();
     else {
         document.getElementById('wordInput').select();
@@ -234,11 +246,12 @@ function refresh() {
     document.getElementById('words').innerHTML = '';
     document.getElementById('wordInput').value = '';
     setRandomWord();
-    chosenAlphabet.forEach(element => alphaClassMap[element] = '');
+    chosenAlphabet.forEach(element => alphaClassMap[element] = 'noTry');
     renderAlphabet();
     document.getElementById('meaning').innerHTML = '';
     adjustWordsTable();
     document.getElementById('wordInput').focus();
+    renderSecretWord();
 }
 
 function increaseLength() {
