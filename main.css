@@ -11,15 +11,25 @@ td {
 }
 
 .wrongChar {
-    background-color: lightgrey;
+    border-width: 2px;
+    border-style: ridge;
+    background-color: grey;
+    color: white;
+    border-color: black;
 }
 
 .wrongPlace {
+    border-width: 2px;
+    border-style: ridge;
     background-color: aquamarine;
+    border-color: blue;
 }
 
 .rightPlace {
+    border-width: 2px;
+    border-style: ridge;
     background-color: greenyellow;
+    border-color: green;
 }
 
 .errorMsg {

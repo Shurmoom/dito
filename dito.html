@@ -33,9 +33,9 @@
             <td style="border-width: 2px; border-style: groove;">
                 <div style="padding-bottom: 5px; padding-top: 5px;">
                     <form onchange="changeAlpha()" id="formChangeAlpha">
-                        <input type="radio" id="alphaTypeQWERTY" name="alphaType" value="QWERTY" checked>
+                        <input type="radio" id="alphaTypeQWERTY" name="alphaType" value="QWERTY">
                         <label for="alphaTypeQWERTY"><small>Teclado</small></label>
-                        <input type="radio" id="alphaTypeALPHA" name="alphaType" value="ALPHA">
+                        <input type="radio" id="alphaTypeALPHA" name="alphaType" value="ALPHA" checked>
                         <label for="alphaTypeALPHA"><small>Alfabeto</small></label>
                         <input type="radio" id="alphaTypePT" name="alphaType" value="PT">
                         <label for="alphaTypePT"><small>Português</small></label>
@@ -44,42 +44,46 @@
                 <table>
                     <tbody id="alphabet">
                         <tr>
-                            <td style="border-width: 2px; border-style: ridge;">Q</td>
-                            <td style="border-width: 2px; border-style: ridge;">W</td>
-                            <td style="border-width: 2px; border-style: ridge;">E</td>
-                            <td style="border-width: 2px; border-style: ridge;">R</td>
-                            <td style="border-width: 2px; border-style: ridge;">T</td>
-                            <td style="border-width: 2px; border-style: ridge;">Y</td>
-                            <td style="border-width: 2px; border-style: ridge;">U</td>
-                            <td style="border-width: 2px; border-style: ridge;">I</td>
-                            <td style="border-width: 2px; border-style: ridge;">O</td>
-                            <td style="border-width: 2px; border-style: ridge;">P</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">A</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">B</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">C</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">D</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">E</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">F</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">G</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">H</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">I</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">J</td>
                         </tr>
                         <tr>
-                            <td style="border-width: 2px; border-style: ridge;">A</td>
-                            <td style="border-width: 2px; border-style: ridge;">S</td>
-                            <td style="border-width: 2px; border-style: ridge;">D</td>
-                            <td style="border-width: 2px; border-style: ridge;">F</td>
-                            <td style="border-width: 2px; border-style: ridge;">G</td>
-                            <td style="border-width: 2px; border-style: ridge;">H</td>
-                            <td style="border-width: 2px; border-style: ridge;">J</td>
-                            <td style="border-width: 2px; border-style: ridge;">K</td>
-                            <td style="border-width: 2px; border-style: ridge;">L</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">K</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">L</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">M</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">N</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">O</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">P</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">Q</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">R</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">S</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">T</td>
                         </tr>
                         <tr>
-                            <td style="border-width: 2px; border-style: ridge;">Z</td>
-                            <td style="border-width: 2px; border-style: ridge;">X</td>
-                            <td style="border-width: 2px; border-style: ridge;">C</td>
-                            <td style="border-width: 2px; border-style: ridge;">V</td>
-                            <td style="border-width: 2px; border-style: ridge;">B</td>
-                            <td style="border-width: 2px; border-style: ridge;">N</td>
-                            <td style="border-width: 2px; border-style: ridge;">M</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">U</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">V</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">W</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">X</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">Y</td>
+                            <td class="" style="border-width: 2px; border-style: ridge;">Z</td>
                         </tr>
                     </tbody>
                 </table>
             </td>
             <td style="border-width: 2px; border-style: groove; padding: 5px;">
                 <table>
+                    <tr>
+                        <td style="border-width: 2px; border-style: ridge;"></td>
+                        <td style="text-align: start;"><small>: não foi tentada</small></td>
+                    </tr>
                     <tr>
                         <td class="wrongChar" style="border-width: 2px; border-style: ridge;"></td>
                         <td style="text-align: start;"><small>: não existe</small></td>
@@ -130,7 +134,7 @@
         </tr>
     </table>
     <div style="width: 673px;">
-        <div id="wordsSection" style="overflow-y: scroll; min-height: 31px; max-height: 300px; width: 200px; margin-left: auto; margin-right: auto; border-width: 2px; border-style: groove; background-color: whitesmoke;">
+        <div id="wordsSection" style="overflow-y: scroll; min-height: 31px; max-height: 200px; width: 210px; margin-left: auto; margin-right: auto; border-width: 2px; border-style: groove; background-color: whitesmoke;">
             <table style="margin-left: auto; margin-right: auto;" id="words"></table>
         </div>
     </div>

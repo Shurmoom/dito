@@ -8,7 +8,7 @@ const ALPHA_ROWS = ['A','K','U'];
 const HCESAR = ['H','C','E','S','A','R','O','P','Z','Q','T','D','I','N','U','L','M','X','Y','J','B','F','V','G','K','W'];
 const HCESAR_ROWS = ['H','Q','Y'];
 
-let chosenAlphabet = QWERTY;
+let chosenAlphabet = ALPHA;
 let alphaClassMap = {};
 
 let word = '';
@@ -16,6 +16,12 @@ setTimeout(() => {
     setRandomWord();
     chosenAlphabet.forEach(element => alphaClassMap[element] = '');
     renderAlphabet();
+    document.getElementById('wordInput').addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            document.getElementById('sendBtn').click();
+        }
+    });
+    document.getElementById('wordInput').focus();
 }, 1);
 
 function italic(string) {
@@ -148,10 +154,11 @@ function returnRow(charArray) {
 function error(msg) {
     document.getElementById('errorBox').innerHTML = `<p class='errorMsg' id='errorMsg'><small>Erro: ${msg}</small></p>`;
     setTimeout(() => {document.getElementById('errorMsg').style.color = 'rgba(0,0,0,0)'}, 1000);
+    document.getElementById('wordInput').select();
 }
 
 function adjustWordsTable() {
-    const newWidth = (+document.getElementById('wordLength').innerHTML * 30) + 30 + (10 * 2);
+    const newWidth = (+document.getElementById('wordLength').innerHTML * 32) + 30 + (10 * 2);
     document.getElementById('wordsSection').style.width = `${newWidth}px`;
 }
 
@@ -186,6 +193,9 @@ function sendWord() {
     document.getElementById(`word${document.getElementById('words').childElementCount-1}`).scrollIntoView();
     renderAlphabet();
     if(word === input) victory();
+    else {
+        document.getElementById('wordInput').select();
+    }
 }
 
 function setRandomWord() {
@@ -228,6 +238,7 @@ function refresh() {
     renderAlphabet();
     document.getElementById('meaning').innerHTML = '';
     adjustWordsTable();
+    document.getElementById('wordInput').focus();
 }
 
 function increaseLength() {
