@@ -11,6 +11,8 @@ const HCESAR_ROWS = ['H','Q','Y'];
 let chosenAlphabet = ALPHA;
 let alphaClassMap = {};
 
+let secretWordMem = null;
+
 let word = '';
 setTimeout(() => {
     setRandomWord();
@@ -139,6 +141,7 @@ function returnRow(charArray) {
         if(word.charAt(i) == char) {
             className = 'rightPlace';
             alphaClassMap[char] = 'rightPlace';
+            secretWordMem[i] = 1;
         } else if(word.includes(char)) {
             className = 'wrongPlace';
             if(alphaClassMap[char] == 'noTry') alphaClassMap[char] = 'wrongPlace';
@@ -178,7 +181,7 @@ function renderSecretWord() {
     const arrayWord = Array.from(word);
     let tableData = '';
     arrayWord.forEach((char, i) => {
-        if(alphaClassMap[char] == 'rightPlace') tableData += `<td class="rightPlace">${char}</td>`;
+        if(alphaClassMap[char] == 'rightPlace' && secretWordMem[i]) tableData += `<td class="rightPlace">${char}</td>`;
         else tableData += `<td class="noTry">?</td>`;
     });
     document.getElementById('secretWord').innerHTML = `<tr>${tableData}</tr>`;
@@ -217,6 +220,7 @@ function setRandomWord() {
         rnd = Math.round(Math.random() * (ALL_WORDS.length-1));
         word = ALL_WORDS[rnd].toUpperCase();
     }
+    secretWordMem = Array(word.length).fill(0);
 }
 
 //  wip: get random word from API
