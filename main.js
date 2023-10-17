@@ -10,10 +10,9 @@ const HCESAR_ROWS = ['H','Q','Y'];
 
 let chosenAlphabet = ALPHA;
 let alphaClassMap = {};
-
 let secretWordMem = null;
-
 let word = '';
+
 setTimeout(() => {
     setRandomWord();
     chosenAlphabet.forEach(element => alphaClassMap[element] = 'noTry');
@@ -25,6 +24,16 @@ setTimeout(() => {
     });
     document.getElementById('wordInput').focus();
     renderSecretWord();
+
+    // ===== localStorage =====
+    if (!localStorage.getItem('victories') || localStorage.getItem('victories') === 'null') clearLocalStorage();
+    if (localStorage.getItem('victories')) document.getElementById('scoreVictories').innerHTML = +localStorage.getItem('victories');
+    else document.getElementById('scoreVictories').innerHTML = 0;
+    if (localStorage.getItem('minNumberTries') > 0) document.getElementById('scoreNumberTries').innerHTML = +localStorage.getItem('minNumberTries');
+    else document.getElementById('scoreNumberTries').innerHTML = '?';
+    if (localStorage.getItem('maxLengthWord') > 0) document.getElementById('scoreBiggestWord').innerHTML = +localStorage.getItem('maxLengthWord');
+    else document.getElementById('scoreBiggestWord').innerHTML = '?';
+    // ========================
 }, 1);
 
 function italic(string) {
@@ -166,15 +175,31 @@ function adjustWordsTable() {
     document.getElementById('wordsSection').style.width = `${newWidth}px`;
 }
 
+function clearLocalStorage() {
+    localStorage.setItem('victories', 0);
+    localStorage.setItem('minNumberTries', 0);
+    localStorage.setItem('maxLengthWord', 0);
+}
+
 function victory() {
+    const nTries = document.getElementById('words').childElementCount;
+
+    // ===== localStorage =====
+    if (localStorage.getItem('victories')) localStorage.setItem('victories', +localStorage.getItem('victories') + 1);
+    else localStorage.setItem('victories', 1);
+
+    if (localStorage.getItem('minNumberTries') && nTries < localStorage.getItem('minNumberTries')) localStorage.setItem('minNumberTries', nTries);
+    else if (+localStorage.getItem('minNumberTries') === 0) localStorage.setItem('minNumberTries', nTries);
+
+    if (localStorage.getItem('maxLengthWord') && word.length > localStorage.getItem('maxLengthWord')) localStorage.setItem('maxLengthWord', word.length);
+    else if (+localStorage.getItem('maxLengthWord') === 0) localStorage.setItem('maxLengthWord', word.length);
+    // ========================
+
     fetchAPI(word.toLowerCase());
     document.getElementById('sendBtn').disabled = true;
-    document.getElementById('scoreVictories').innerHTML = +document.getElementById('scoreVictories').innerHTML + 1;
-    const nTries = document.getElementById('words').childElementCount;
-    if (document.getElementById('scoreNumberTries').innerHTML === '?' || nTries < +document.getElementById('scoreNumberTries').innerHTML)
-        document.getElementById('scoreNumberTries').innerHTML = nTries;
-    if (document.getElementById('scoreBiggestWord').innerHTML === '?' || word.length > +document.getElementById('scoreBiggestWord').innerHTML)
-        document.getElementById('scoreBiggestWord').innerHTML = word.length;
+    document.getElementById('scoreVictories').innerHTML = +localStorage.getItem('victories');
+    document.getElementById('scoreNumberTries').innerHTML = +localStorage.getItem('minNumberTries');
+    document.getElementById('scoreBiggestWord').innerHTML = +localStorage.getItem('maxLengthWord');
 }
 
 function renderSecretWord() {
