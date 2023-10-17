@@ -19,7 +19,8 @@ setTimeout(() => {
     renderAlphabet();
     document.getElementById('wordInput').addEventListener("keypress", (event) => {
         if (event.key === "Enter") {
-            document.getElementById('sendBtn').click();
+            // document.getElementById('sendBtn').click();
+            sendWord();
         }
     });
     document.getElementById('wordInput').focus();
@@ -195,11 +196,14 @@ function victory() {
     else if (+localStorage.getItem('maxLengthWord') === 0) localStorage.setItem('maxLengthWord', word.length);
     // ========================
 
+    setTimeout(() => {
+        document.getElementById('scoreVictories').innerHTML = +localStorage.getItem('victories');
+        document.getElementById('scoreNumberTries').innerHTML = +localStorage.getItem('minNumberTries');
+        document.getElementById('scoreBiggestWord').innerHTML = +localStorage.getItem('maxLengthWord');
+    }, 1);
+    
     fetchAPI(word.toLowerCase());
     document.getElementById('sendBtn').disabled = true;
-    document.getElementById('scoreVictories').innerHTML = +localStorage.getItem('victories');
-    document.getElementById('scoreNumberTries').innerHTML = +localStorage.getItem('minNumberTries');
-    document.getElementById('scoreBiggestWord').innerHTML = +localStorage.getItem('maxLengthWord');
 }
 
 function renderSecretWord() {
